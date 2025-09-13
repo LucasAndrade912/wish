@@ -7,7 +7,9 @@ export function PrivateRoutes() {
         <main className="w-full py-8 px-12">
             <header className="mb-10 w-full flex justify-between">
                 <h1 className="text-2xl font-medium">
-                    <a href="/">Wish</a>
+                    <a href="/" className="text-rose-800 font-semibold">
+                        Wish
+                    </a>
                 </h1>
 
                 <Button variant="outline" className="cursor-pointer">
