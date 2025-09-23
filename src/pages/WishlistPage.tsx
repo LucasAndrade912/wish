@@ -28,9 +28,18 @@ const MOCK_DATA = [
     },
 ];
 
+const supportedDomains = ['pt.aliexpress.com'];
+
 export function WishlistPage() {
     return (
         <main>
+            <p className="text-center mb-3 text-sm text-gray-700">
+                Domínios suportados para busca automática de informações:{' '}
+                {supportedDomains.map((domain) => (
+                    <strong key={domain}>{domain}</strong>
+                ))}
+            </p>
+
             <div className="flex items-end gap-6 justify-center">
                 <Input
                     type="url"
