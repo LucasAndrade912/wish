@@ -1,4 +1,4 @@
-import { type FormEvent } from 'react';
+import { type FormEvent, useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,7 +34,11 @@ const MOCK_DATA = [
 const supportedDomains = ['pt.aliexpress.com'];
 
 export function WishlistPage() {
-    const { mutate, isPending } = useAddProduct();
+    const addProductFormRef = useRef<HTMLFormElement | null>(null);
+
+    const { mutate, isPending } = useAddProduct({
+        onAddProduct: () => addProductFormRef.current?.reset(),
+    });
 
     function handleScrapeFromUrl(event: FormEvent) {
         event.preventDefault();
@@ -55,6 +59,7 @@ export function WishlistPage() {
 
             <form
                 onSubmit={handleScrapeFromUrl}
+                ref={addProductFormRef}
                 className="flex items-end gap-6 justify-center">
                 <Input
                     type="url"
