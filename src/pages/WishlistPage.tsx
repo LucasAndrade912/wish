@@ -1,8 +1,11 @@
+import { type FormEvent } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-import placeholderImg from '../assets/placeholder-img.png';
 import { WishProduct } from '@/components/WishProduct';
+import { useAddProduct } from '@/hooks/useAddProduct';
+import placeholderImg from '../assets/placeholder-img.png';
+import { LoaderCircle } from 'lucide-react';
 
 const MOCK_DATA = [
     {
@@ -31,6 +34,16 @@ const MOCK_DATA = [
 const supportedDomains = ['pt.aliexpress.com'];
 
 export function WishlistPage() {
+    const { mutate, isPending } = useAddProduct();
+
+    function handleScrapeFromUrl(event: FormEvent) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target as HTMLFormElement);
+        const url = formData.get('link')?.toString().trim() ?? '';
+        mutate(url);
+    }
+
     return (
         <main>
             <p className="text-center mb-3 text-sm text-gray-700">
@@ -40,16 +53,25 @@ export function WishlistPage() {
                 ))}
             </p>
 
-            <div className="flex items-end gap-6 justify-center">
+            <form
+                onSubmit={handleScrapeFromUrl}
+                className="flex items-end gap-6 justify-center">
                 <Input
                     type="url"
                     id="link"
+                    name="link"
                     placeholder="Informe o link do produto que será adicionado"
                     className="w-[428px]"
                 />
 
-                <Button>Adicionar na lista</Button>
-            </div>
+                <Button className="w-[144px]">
+                    {isPending ? (
+                        <LoaderCircle className="animate-spin" />
+                    ) : (
+                        'Adicionar na lista'
+                    )}
+                </Button>
+            </form>
 
             <div id="wishlist" className="mt-10 mx-auto w-[800px] flex flex-col gap-3">
                 {MOCK_DATA.map((product) => (
