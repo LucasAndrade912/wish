@@ -2,36 +2,33 @@ import { Pencil, Trash } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface WishProductProps {
-    id: number;
+    id: string;
     title: string;
     price: number;
+    formattedPrice: string;
     link: string;
     image: string;
 }
 
-export function WishProduct({ id, title, price, link, image }: WishProductProps) {
+export function WishProduct({
+    id,
+    title,
+    formattedPrice,
+    link,
+    image,
+}: WishProductProps) {
     return (
-        <div key={id} className="product flex border rounded-sm">
-            <div className="product-image">
-                <img src={image} alt="Placeholder Image" />
+        <div key={id} className="product flex border rounded-sm overflow-hidden">
+            <div className="product-image min-w-[180px] w-[180px] max-h-[140px]">
+                <img src={image} alt={title} className="object-cover w-full h-full" />
             </div>
 
             <div className="product-info flex flex-col justify-center gap-2 pl-6">
-                <p>
+                <p className="max-w-md truncate inline-block">
                     <span className="font-semibold">Título:</span> <span>{title}</span>
                 </p>
 
-                <p>
-                    <span className="font-semibold">Preço:</span>{' '}
-                    <span>
-                        {new Intl.NumberFormat('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                        }).format(price)}
-                    </span>
-                </p>
-
-                <p>
+                <p className="max-w-md truncate inline-block">
                     <span className="font-semibold">Link do produto:</span>{' '}
                     <a
                         href={link}
@@ -39,6 +36,11 @@ export function WishProduct({ id, title, price, link, image }: WishProductProps)
                         className="text-blue-500 hover:underline">
                         {link}
                     </a>
+                </p>
+
+                <p>
+                    <span className="font-semibold">Preço:</span>{' '}
+                    <span>{formattedPrice}</span>
                 </p>
             </div>
 
