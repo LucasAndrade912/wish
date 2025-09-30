@@ -1,4 +1,4 @@
-import { Pencil, Trash } from 'lucide-react';
+import { LoaderCircle, Pencil, Trash } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface WishProductProps {
@@ -8,6 +8,8 @@ interface WishProductProps {
     formattedPrice: string;
     link: string;
     image: string;
+    onDeleteProduct: (id: string) => void;
+    isDeletingProduct: boolean;
 }
 
 export function WishProduct({
@@ -16,6 +18,8 @@ export function WishProduct({
     formattedPrice,
     link,
     image,
+    onDeleteProduct,
+    isDeletingProduct,
 }: WishProductProps) {
     return (
         <div key={id} className="product flex border rounded-sm overflow-hidden">
@@ -45,12 +49,23 @@ export function WishProduct({
             </div>
 
             <div className="flex flex-col justify-center items-end flex-1 gap-4 pr-6">
-                <Button variant="outline">
-                    <Pencil />
+                <Button variant="outline" disabled={isDeletingProduct}>
+                    {isDeletingProduct ? (
+                        <LoaderCircle className="animate-spin" />
+                    ) : (
+                        <Pencil />
+                    )}
                 </Button>
 
-                <Button variant="outline">
-                    <Trash />
+                <Button
+                    variant="outline"
+                    onClick={() => onDeleteProduct(id)}
+                    disabled={isDeletingProduct}>
+                    {isDeletingProduct ? (
+                        <LoaderCircle className="animate-spin" />
+                    ) : (
+                        <Trash />
+                    )}
                 </Button>
             </div>
         </div>

@@ -17,6 +17,7 @@ import {
 import { useAddProduct } from '@/hooks/useAddProduct';
 import { useGetProducts } from '@/hooks/useGetProducts';
 import placeholderImg from '../assets/placeholder-img.png';
+import { useDeleteProduct } from '@/hooks/useDeleteProduct';
 
 const supportedDomains = ['pt.aliexpress.com'];
 
@@ -32,16 +33,18 @@ export function WishlistPage() {
         });
     }, []);
 
-    const { mutate, isPending } = useAddProduct({
+    const { mutate: addProduct, isPending: isAddingProduct } = useAddProduct({
         onAddProduct: () => addProductFormRef.current?.reset(),
     });
+
+    const { mutate: deleteProduct, isPending: isDeletingProduct } = useDeleteProduct();
 
     function handleScrapeFromUrl(event: FormEvent) {
         event.preventDefault();
 
         const formData = new FormData(event.target as HTMLFormElement);
         const url = formData.get('link')?.toString().trim() ?? '';
-        mutate(url);
+        addProduct(url);
     }
 
     function handlePageChange(newPage: number) {
@@ -171,7 +174,7 @@ export function WishlistPage() {
                 />
 
                 <Button className="w-[144px]">
-                    {isPending ? (
+                    {isAddingProduct ? (
                         <LoaderCircle className="animate-spin" />
                     ) : (
                         'Adicionar na lista'
@@ -203,6 +206,8 @@ export function WishlistPage() {
                                     key={product.id}
                                     {...product}
                                     image={image}
+                                    onDeleteProduct={deleteProduct}
+                                    isDeletingProduct={isDeletingProduct}
                                 />
                             );
                         })}
