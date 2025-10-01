@@ -1,4 +1,4 @@
-import { LoaderCircle, Pencil, Trash } from 'lucide-react';
+import { LoaderCircle, RefreshCw, Trash } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface WishProductProps {
@@ -10,6 +10,8 @@ interface WishProductProps {
     image: string;
     onDeleteProduct: (id: string) => void;
     isDeletingProduct: boolean;
+    onUpdateProduct: ({ productId, url }: { productId: string; url: string }) => void;
+    isUpdatingProduct: boolean;
 }
 
 export function WishProduct({
@@ -20,6 +22,8 @@ export function WishProduct({
     image,
     onDeleteProduct,
     isDeletingProduct,
+    onUpdateProduct,
+    isUpdatingProduct,
 }: WishProductProps) {
     return (
         <div key={id} className="product flex border rounded-sm overflow-hidden">
@@ -49,18 +53,26 @@ export function WishProduct({
             </div>
 
             <div className="flex flex-col justify-center items-end flex-1 gap-4 pr-6">
-                <Button variant="outline" disabled={isDeletingProduct}>
-                    {isDeletingProduct ? (
-                        <LoaderCircle className="animate-spin" />
+                <Button
+                    variant="outline"
+                    onClick={() => {
+                        console.log('Atualizando produto', id);
+                        onUpdateProduct({ productId: id, url: link });
+                    }}
+                    disabled={isDeletingProduct || isUpdatingProduct}
+                    title="Atualizar dados do produto">
+                    {isUpdatingProduct ? (
+                        <RefreshCw className="animate-spin" />
                     ) : (
-                        <Pencil />
+                        <RefreshCw />
                     )}
                 </Button>
 
                 <Button
                     variant="outline"
                     onClick={() => onDeleteProduct(id)}
-                    disabled={isDeletingProduct}>
+                    disabled={isDeletingProduct || isUpdatingProduct}
+                    title="Remover produto da lista">
                     {isDeletingProduct ? (
                         <LoaderCircle className="animate-spin" />
                     ) : (

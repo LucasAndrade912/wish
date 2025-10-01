@@ -18,13 +18,15 @@ import { useAddProduct } from '@/hooks/useAddProduct';
 import { useGetProducts } from '@/hooks/useGetProducts';
 import placeholderImg from '../assets/placeholder-img.png';
 import { useDeleteProduct } from '@/hooks/useDeleteProduct';
+import { useUpdateProduct } from '@/hooks/useUpdateProduct';
 
 const supportedDomains = ['pt.aliexpress.com'];
 
 export function WishlistPage() {
     const addProductFormRef = useRef<HTMLFormElement | null>(null);
-    const { data: response, isLoading } = useGetProducts();
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const { data: response, isLoading } = useGetProducts();
 
     useEffect(() => {
         setSearchParams((searchParams) => {
@@ -38,6 +40,8 @@ export function WishlistPage() {
     });
 
     const { mutate: deleteProduct, isPending: isDeletingProduct } = useDeleteProduct();
+
+    const { mutate: updateProduct, isPending: isUpdatingProduct } = useUpdateProduct();
 
     function handleScrapeFromUrl(event: FormEvent) {
         event.preventDefault();
@@ -208,6 +212,8 @@ export function WishlistPage() {
                                     image={image}
                                     onDeleteProduct={deleteProduct}
                                     isDeletingProduct={isDeletingProduct}
+                                    onUpdateProduct={updateProduct}
+                                    isUpdatingProduct={isUpdatingProduct}
                                 />
                             );
                         })}
