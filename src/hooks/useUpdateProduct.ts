@@ -8,15 +8,21 @@ type UpdateParams = {
     productId: string;
 };
 
-export function useUpdateProduct() {
+type UseUpdateProductOptions = {
+    onMutate?: (variables: UpdateParams) => void;
+    onSettled?: () => void;
+};
+
+export function useUpdateProduct(options?: UseUpdateProductOptions) {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: ({ url, productId }: UpdateParams) => updateProduct(url, productId),
+        onMutate: options?.onMutate,
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['products'] });
 
-            await Swal.fire({
+            Swal.fire({
                 title: 'Produto atualizado!',
                 icon: 'success',
             });
@@ -28,5 +34,6 @@ export function useUpdateProduct() {
                 icon: 'error',
             });
         },
+        onSettled: options?.onSettled,
     });
 }

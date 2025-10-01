@@ -1,4 +1,4 @@
-import { type FormEvent, useRef, useEffect } from 'react';
+import { type FormEvent, useRef, useEffect, useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router';
 
@@ -25,6 +25,7 @@ const supportedDomains = ['pt.aliexpress.com'];
 export function WishlistPage() {
     const addProductFormRef = useRef<HTMLFormElement | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [updatingProductId, setUpdatingProductId] = useState<string | null>(null);
 
     const { data: response, isLoading } = useGetProducts();
 
@@ -41,7 +42,10 @@ export function WishlistPage() {
 
     const { mutate: deleteProduct, isPending: isDeletingProduct } = useDeleteProduct();
 
-    const { mutate: updateProduct, isPending: isUpdatingProduct } = useUpdateProduct();
+    const { mutate: updateProduct } = useUpdateProduct({
+        onMutate: ({ productId }) => setUpdatingProductId(productId),
+        onSettled: () => setUpdatingProductId(null),
+    });
 
     function handleScrapeFromUrl(event: FormEvent) {
         event.preventDefault();
@@ -213,7 +217,7 @@ export function WishlistPage() {
                                     onDeleteProduct={deleteProduct}
                                     isDeletingProduct={isDeletingProduct}
                                     onUpdateProduct={updateProduct}
-                                    isUpdatingProduct={isUpdatingProduct}
+                                    isUpdatingProduct={updatingProductId === product.id}
                                 />
                             );
                         })}
