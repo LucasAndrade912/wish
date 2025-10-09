@@ -1,8 +1,12 @@
-import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { Outlet } from 'react-router';
 
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+
 export function PrivateRoutes() {
+    const { logout } = useAuth();
+
     return (
         <main className="w-full py-8 px-12">
             <header className="mb-10 w-full flex justify-between">
@@ -12,7 +16,10 @@ export function PrivateRoutes() {
                     </a>
                 </h1>
 
-                <Button variant="outline" className="cursor-pointer">
+                <Button
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => logout()}>
                     <LogOut /> Sair
                 </Button>
             </header>
